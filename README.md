@@ -17,7 +17,7 @@ Artists are also welcome to contribute. Contact me if you are interested.
 Simple:
 
  - Have [Rust](https://www.rust-lang.org/) installed
- - Clone this [repo](https://github.com/it-2001/WizardPosting)
+ - Clone this repo: `https://github.com/it-2001/WizardPosting`
  - Run `cargo run` in the repo directory
 
 And hopefully it works.
