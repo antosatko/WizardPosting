@@ -4,3 +4,4 @@ pub mod effects;
 pub mod procgen;
 pub mod camps;
 pub mod worlddata;
+pub mod attacks;

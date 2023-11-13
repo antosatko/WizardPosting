@@ -146,3 +146,29 @@ impl Unit for Player {
         &mut self.effects
     }
 }
+
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct PlayerId {
+    pub id: usize,
+    pub side: Sides,   
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Sides {
+    Blue,
+    Red,
+    All,
+}
+
+impl PlayerId {
+    pub fn new(id: usize, side: Sides) -> PlayerId {
+        if side == Sides::All {
+            panic!("PlayerId cannot be created with side All");
+        }
+        PlayerId {
+            id,
+            side,
+        }
+    }
+}

@@ -9,15 +9,6 @@ pub struct Effect {
 }
 
 impl Effect {
-    pub fn new(eff: Effects, duration: f32) -> Effect {
-        Effect {
-            eff,
-            duration,
-            max_duration: duration,
-            is_buff: eff.is_buff(),
-        }
-    }
-
     pub fn update(mut self, player: &mut Player) -> Self {
         self.eff = self.eff.update(player);
         self.duration -= 1.0;

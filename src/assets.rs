@@ -4,13 +4,19 @@ use raylib::prelude::*;
 
 pub struct AssetStorage {
     pub player: raylib::texture::Texture2D,
+    pub magicball: raylib::texture::Texture2D,
 }
 
 impl AssetStorage {
     pub fn new(rl: &mut RaylibHandle, thread: &RaylibThread) -> AssetStorage {
-        let player = raylib::texture::Image::load_image("assets/player.png").unwrap();
-        let player = rl.load_texture_from_image(thread, &player).unwrap();
-        AssetStorage { player }
+        let player = Self::load_texture(rl, thread, "assets/player.png");
+        let magicball = Self::load_texture(rl, thread, "assets/magicball.png");
+        AssetStorage { player, magicball }
+    }
+
+    pub fn load_texture(rl: &mut RaylibHandle, thread: &RaylibThread, path: &str) -> Texture2D {
+        let img = Image::load_image(path).unwrap();
+        rl.load_texture_from_image(thread, &img).unwrap()
     }
 }
 
