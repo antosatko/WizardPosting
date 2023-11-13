@@ -1,4 +1,4 @@
-use raylib::prelude::*;
+use raylib::{prelude::*, ffi::{GenImageColor, LoadTextureFromImage}};
 
 use super::procgen::Tiles;
 
@@ -25,22 +25,25 @@ impl Tiles {
 
 pub fn temp_draw_grid(
     grid: &super::procgen::Grid,
-    d: &mut RaylibDrawHandle,
-) {
-    let (tile_width, tile_height) = (1600 / grid.width, 900 / grid.height);
+) -> Image {
+    let mut d = Image::gen_image_color(1600, 900, Color::BLANK);
+
+    let (tile_width, tile_height) = (1600. / grid.width as f64, 900. / grid.height as f64);
 
     for x in 0..grid.width {
         for y in 0..grid.height {
             let tile = grid.get_tile(x, y);
             if tile.tile != Tiles::Air {
                 d.draw_rectangle(
-                    x * tile_width,
-                    y * tile_height,
-                    tile_width,
-                    tile_height,
+                    (x as f64 * tile_width) as i32,
+                    (y as f64 * tile_height) as i32,
+                    tile_width as i32 + 1,
+                    tile_height as i32 + 1,
                     tile.tile.get_color(),
                 );
             }
         }
     }
+
+    d
 }

@@ -23,12 +23,14 @@ fn main() {
 
     let mut player = Player::new();
     
-    let grid = systems::procgen::Grid::new(100, 100);
-    
-    println!("{:?}", grid);
+    let grid = systems::procgen::Grid::new(600, 500);
+    let grid_image = systems::worlddata::temp_draw_grid(&grid);
+    let grid_texture = rl.load_texture_from_image(&thread, &grid_image).unwrap();
+
+    // println!("{:?}", grid);
     
     while !rl.window_should_close() {
-        let mut time = std::time::Instant::now();
+        let time = std::time::Instant::now();
         if rl.is_window_resized() {
             let (w, h) = (rl.get_screen_width(), rl.get_screen_height());
             screen.resize(w, h);
@@ -41,7 +43,12 @@ fn main() {
         let mut d = rl.begin_drawing(&thread);
         d.clear_background(Color::WHITE);
 
-        systems::worlddata::temp_draw_grid(&grid, &mut d);
+        d.draw_texture(
+            &grid_texture,
+            0,
+            0,
+            Color::WHITE,
+        );
         {
             let mut d2 = d.begin_mode2D(screen.camera);
 
