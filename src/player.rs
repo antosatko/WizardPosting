@@ -82,16 +82,7 @@ impl Player {
             up: Up::new(),
             hard_stats: Stats::new(),
             stats: Stats::new(),
-            effects: vec![
-                Effect::new(
-                    Effects::Speed {
-                        speed: 1.0,
-                        linger: 0.1,
-                    },
-                    100.0,
-                ),
-                Effect::new(Effects::SlowFall { speed: 0.5 }, 100.0),
-            ],
+            effects: vec![],
             effect_stats: EffectStats::new(),
         }
     }
