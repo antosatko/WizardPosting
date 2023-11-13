@@ -1,7 +1,7 @@
 use super::camps::Camp;
 
 
-#[derive(PartialEq, Clone)]
+#[derive(PartialEq, Clone, Debug)]
 pub struct Grid {
     pub width: i32,
     pub height: i32,
@@ -10,14 +10,24 @@ pub struct Grid {
     pub camps: Vec<Camp>,
 }
 
-#[derive(PartialEq, Clone, Copy)]
+#[derive(PartialEq, Clone, Copy, Debug)]
 pub struct Tile {
     pub tile: Tiles,
     pub smooth_tile: Option<SmoothTiles>,
     pub durability: i32,
 }
 
-#[derive(PartialEq, Clone)]
+impl Tile {
+    pub fn new(tile: Tiles) -> Self {
+        Self {
+            tile,
+            smooth_tile: None,
+            durability: tile.durability(),
+        }
+    }
+}
+
+#[derive(PartialEq, Clone, Debug)]
 pub struct CaveNode {
     x: i32,
     y: i32,
@@ -25,7 +35,7 @@ pub struct CaveNode {
     radius: i32,
 }
 
-#[derive(PartialEq, Copy, Clone)]
+#[derive(PartialEq, Copy, Clone, Debug)]
 pub enum Tiles {
     /// ------------------- World building -------------------
     Air,
@@ -55,8 +65,16 @@ pub enum Tiles {
     Leaves,
 }
 
+impl Tiles {
+    pub fn durability(&self) -> i32 {
+        match self {
+            _ => 5
+        }
+    }
+}
+
 /// Smooth tiles can be placed on top of other tiles.
-#[derive(PartialEq, Copy, Clone)]
+#[derive(PartialEq, Copy, Clone, Debug)]
 pub enum SmoothTiles {
     Pebbles,
     Sand,
@@ -68,6 +86,7 @@ pub enum SmoothTiles {
 }
 
 impl Grid {
+    /// Procedurally generates a new grid.
     pub fn new(width: i32, height: i32) -> Self {
         let mut tiles = Vec::new();
         let mut caves = Vec::new();
@@ -85,12 +104,36 @@ impl Grid {
             tiles.push(row);
         }
 
-        Self {
+        let mut this = Self {
             width,
             height,
             tiles,
             caves,
             camps,
+        };
+        
+        // lowest layer
+        for x in 0..width {
+            for y in 0..height {
+                if y < 10 {
+                    this.set_tile(x, y, Tile::new(Tiles::Grass));
+                } else if y < 20 {
+                    this.set_tile(x, y, Tile::new(Tiles::Dirt));
+                } else if y < 30 {
+                    this.set_tile(x, y, Tile::new(Tiles::Stone));
+                } else {
+                    this.set_tile(x, y, Tile::new(Tiles::HardStone));
+                }
+            }
         }
+        this
+    }
+
+    pub fn get_tile(&self, x: i32, y: i32) -> &Tile {
+        &self.tiles[x as usize][self.height as usize - y as usize - 1]
+    }
+
+    pub fn set_tile(&mut self, x: i32, y: i32, tile: Tile) {
+        self.tiles[x as usize][self.height as usize - y as usize - 1] = tile;
     }
 }

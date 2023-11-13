@@ -22,8 +22,13 @@ fn main() {
     let assets = AssetStorage::new(&mut rl, &thread);
 
     let mut player = Player::new();
-
+    
+    let grid = systems::procgen::Grid::new(100, 100);
+    
+    println!("{:?}", grid);
+    
     while !rl.window_should_close() {
+        let mut time = std::time::Instant::now();
         if rl.is_window_resized() {
             let (w, h) = (rl.get_screen_width(), rl.get_screen_height());
             screen.resize(w, h);
@@ -36,6 +41,7 @@ fn main() {
         let mut d = rl.begin_drawing(&thread);
         d.clear_background(Color::WHITE);
 
+        systems::worlddata::temp_draw_grid(&grid, &mut d);
         {
             let mut d2 = d.begin_mode2D(screen.camera);
 
@@ -45,5 +51,15 @@ fn main() {
         }
 
         d.draw_fps(10, 10);
+        
+        let frametime = time.elapsed().as_millis();
+
+        d.draw_text(
+            &format!("Frametime: {}ms", frametime),
+            10,
+            30,
+            20,
+            Color::BLACK,
+        );
     }
 }
