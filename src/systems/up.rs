@@ -2,7 +2,7 @@ use crate::player::Player;
 
 use raylib::prelude::*;
 
-use super::effects::{Effect, Effects};
+use super::{effects::{Effect, Effects}, units::Unit};
 
 #[derive(Debug, Clone, Copy)]
 pub enum Up {
@@ -46,7 +46,7 @@ impl Up {
         }*/
     }
 
-    pub fn up(mut self, player: &mut Player, rl: &RaylibHandle, thread: &RaylibThread) -> Self {
+    pub fn up(mut self, unit: &mut dyn Unit, rl: &RaylibHandle, thread: &RaylibThread) -> Self {
         match &mut self {
             Up::Jump {
                 strength,
@@ -54,9 +54,9 @@ impl Up {
                 max_jumps,
                 can_jump,
             } => {
-                if *can_jump && jump_count <= max_jumps && player.effect_stats.can_jump {
+                if *can_jump && jump_count <= max_jumps && unit.get_effect_stats_mut().can_jump {
                     *jump_count += 1;
-                    player.speed.y = -*strength;
+                    unit.get_speed_mut().y = -*strength;
                     *can_jump = false;
                 }
             }
@@ -65,9 +65,9 @@ impl Up {
                 duration,
                 max_duration,
             } => {
-                if *duration <= *max_duration && player.effect_stats.can_fly {
+                if *duration <= *max_duration && unit.get_effect_stats_mut().can_fly {
                     *duration += 1.0;
-                    player.speed.y = -*strength;
+                    unit.get_speed_mut().y = -*strength;
                 }
             }
             Up::Teleport {
@@ -78,11 +78,11 @@ impl Up {
             } => {
                 if *teleport_count <= *max_teleport
                     && *can_teleport
-                    && player.effect_stats.can_teleport
+                    && unit.get_effect_stats_mut().can_teleport
                 {
-                    player.position.y -= *strength;
+                    unit.get_position_mut().y -= *strength;
                     *teleport_count += 1;
-                    player.speed.y = -5.;
+                    unit.get_speed_mut().y = -5.;
                     *can_teleport = false;
                 }
             }
@@ -92,7 +92,7 @@ impl Up {
 
     pub fn release(
         mut self,
-        player: &mut Player,
+        unit: &mut dyn Unit,
         rl: &RaylibHandle,
         thread: &RaylibThread,
     ) -> Self {
@@ -122,7 +122,7 @@ impl Up {
         self
     }
 
-    pub fn down(mut self, player: &mut Player, rl: &RaylibHandle, thread: &RaylibThread) -> Self {
+    pub fn down(mut self, unit: &mut dyn Unit, rl: &RaylibHandle, thread: &RaylibThread) -> Self {
         match &mut self {
             Up::Jump {
                 strength,
@@ -130,7 +130,7 @@ impl Up {
                 max_jumps,
                 can_jump: _,
             } => {
-                player.speed.y += *strength * 0.2;
+                unit.get_speed_mut().y += *strength * 0.2;
             }
             Up::Fly {
                 strength,

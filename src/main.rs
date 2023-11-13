@@ -26,8 +26,6 @@ fn main() {
     let grid = systems::procgen::Grid::new(600, 500);
     let grid_image = systems::worlddata::temp_draw_grid(&grid);
     let grid_texture = rl.load_texture_from_image(&thread, &grid_image).unwrap();
-
-    // println!("{:?}", grid);
     
     while !rl.window_should_close() {
         let time = std::time::Instant::now();
