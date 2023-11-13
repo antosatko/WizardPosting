@@ -19,6 +19,9 @@ impl Tiles {
             Tiles::Sapphire => Color { r: 128, g: 128, b: 255, a: 255 },
             Tiles::Diamond => Color { r: 255, g: 255, b: 255, a: 255 },
             Tiles::Log => Color::BROWN,
+            Tiles::Wood => Color::BROWN,
+            Tiles::HardenedStone => Color::DARKGRAY,
+            Tiles::Iron => Color::GRAY,
         }
     }
 }

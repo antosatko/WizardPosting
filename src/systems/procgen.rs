@@ -60,9 +60,15 @@ pub enum Tiles {
     Diamond,
 
     /// ------------------- Environmental -------------------
-    /// Environmental tiles are used to create structures.
+    /// Environmental tiles are usually used for generated structures.
     Log,
     Leaves,
+
+    /// ------------------- Player built -------------------
+    /// Player built tiles are created and placed by the player.
+    Wood,
+    HardenedStone,
+    Iron,
 }
 
 impl Tiles {
