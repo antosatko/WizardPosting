@@ -4,7 +4,8 @@ use crate::{
     assets,
     systems::{
         effects::{Effect, Effects},
-        units::{Unit, Stats, EffectStats},
+        inventory::Inventory,
+        units::{EffectStats, Stats, Unit},
         up::Up,
     },
 };
@@ -22,11 +23,15 @@ pub struct Player {
     pub stats: Stats,
     pub effects: Vec<Effect>,
     pub effect_stats: EffectStats,
+    pub inventory: Inventory,
 }
 
-
 impl Player {
-    pub fn new() -> Player {
+    pub fn new(
+        assets: &mut assets::AssetStorage,
+        rl: &mut RaylibHandle,
+        thread: &RaylibThread,
+    ) -> Self {
         Player {
             position: Vector2::new(0.0, 0.0),
             speed: Vector2::new(0.0, 0.0),
@@ -35,6 +40,7 @@ impl Player {
             stats: Stats::new(),
             effects: vec![],
             effect_stats: EffectStats::new(),
+            inventory: Inventory::new(assets, rl, thread),
         }
     }
 
@@ -50,6 +56,8 @@ impl Player {
     pub fn update(&mut self, rl: &RaylibHandle, thread: &RaylibThread) {
         self.stats = self.hard_stats.clone();
         self.effect_stats = EffectStats::new();
+
+        self.inventory.scroll(rl.get_mouse_wheel_move() as i32);
 
         let mut i = 0;
         while i < self.effects.len() {
@@ -117,7 +125,7 @@ impl Unit for Player {
     fn draw(&self, assets: &assets::AssetStorage, d: &mut RaylibMode2D<RaylibDrawHandle>) {
         self.draw(assets, d);
     }
-    
+
     fn get_speed_mut(&mut self) -> &mut Vector2 {
         &mut self.speed
     }
@@ -147,11 +155,10 @@ impl Unit for Player {
     }
 }
 
-
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct PlayerId {
     pub id: usize,
-    pub side: Sides,   
+    pub side: Sides,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -166,9 +173,6 @@ impl PlayerId {
         if side == Sides::All {
             panic!("PlayerId cannot be created with side All");
         }
-        PlayerId {
-            id,
-            side,
-        }
+        PlayerId { id, side }
     }
 }

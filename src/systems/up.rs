@@ -2,7 +2,10 @@ use crate::player::Player;
 
 use raylib::prelude::*;
 
-use super::{effects::{Effect, Effects}, units::Unit};
+use super::{
+    effects::{Effect, Effects},
+    units::Unit,
+};
 
 #[derive(Debug, Clone, Copy)]
 pub enum Up {

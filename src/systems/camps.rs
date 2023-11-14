@@ -1,6 +1,3 @@
-
-
-
 #[derive(Clone, Debug, PartialEq)]
 pub struct Camp {
     pub x: i32,

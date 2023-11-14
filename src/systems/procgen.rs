@@ -1,6 +1,5 @@
 use super::camps::Camp;
 
-
 #[derive(PartialEq, Clone, Debug)]
 pub struct Grid {
     pub width: i32,
@@ -42,7 +41,8 @@ pub enum Tiles {
     Grass,
     Dirt,
     Stone,
-    HardStone, /// HardStone is a stone that is harder to break than normal stone and forms the deepest layer of the world.
+    HardStone,
+    /// HardStone is a stone that is harder to break than normal stone and forms the deepest layer of the world.
 
     /// ------------------- Ores -------------------
     /// Ores are scattered throughout the stone and hardstone layers.
@@ -74,7 +74,7 @@ pub enum Tiles {
 impl Tiles {
     pub fn durability(&self) -> i32 {
         match self {
-            _ => 5
+            _ => 5,
         }
     }
 }
@@ -93,14 +93,16 @@ pub enum SmoothTiles {
 
 impl Grid {
     /// Procedurally generates a new grid.
-    pub fn new(width: i32, height: i32) -> Self {
+    pub fn new() -> Self {
+        const WIDTH: i32 = 512;
+        const HEIGHT: i32 = 1024;
         let mut tiles = Vec::new();
         let mut caves = Vec::new();
         let mut camps = Vec::new();
-        
-        for _ in 0..width {
+
+        for _ in 0..WIDTH {
             let mut row = Vec::new();
-            for _ in 0..height {
+            for _ in 0..HEIGHT {
                 row.push(Tile {
                     tile: Tiles::Air,
                     smooth_tile: None,
@@ -111,21 +113,21 @@ impl Grid {
         }
 
         let mut this = Self {
-            width,
-            height,
+            width: WIDTH,
+            height: HEIGHT,
             tiles,
             caves,
             camps,
         };
-        
+
         // lowest layer
-        for x in 0..width {
-            for y in 0..height {
-                if y < 10 {
+        for x in 0..WIDTH {
+            for y in 512..HEIGHT {
+                if y < 513 {
                     this.set_tile(x, y, Tile::new(Tiles::Grass));
-                } else if y < 20 {
+                } else if y < 518 {
                     this.set_tile(x, y, Tile::new(Tiles::Dirt));
-                } else if y < 30 {
+                } else if y < 600 {
                     this.set_tile(x, y, Tile::new(Tiles::Stone));
                 } else {
                     this.set_tile(x, y, Tile::new(Tiles::HardStone));

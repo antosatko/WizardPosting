@@ -2,7 +2,7 @@ use raylib::prelude::*;
 
 use crate::assets;
 
-use super::effects::Effect;
+use super::{attacks::AttackNodes, effects::Effect};
 
 pub trait Unit {
     fn update(&mut self, rl: &RaylibHandle, thread: &RaylibThread);
@@ -23,7 +23,6 @@ pub trait Unit {
 
     fn get_effects_mut(&mut self) -> &mut Vec<Effect>;
 }
-
 
 #[derive(Debug, Clone, Copy)]
 pub struct EffectStats {
@@ -73,4 +72,14 @@ impl Stats {
             max_speed: 7.0,
         }
     }
+}
+
+#[derive(Debug, Clone)]
+pub enum Summons {
+    Bat {
+        stats: Stats,
+        effects: Vec<Effect>,
+        on_attack: Option<Box<AttackNodes>>,
+        on_death: Option<Box<AttackNodes>>,
+    },
 }

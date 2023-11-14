@@ -7,6 +7,7 @@ use player::*;
 
 mod assets;
 use assets::*;
+use systems::inventory;
 
 mod systems;
 
@@ -19,14 +20,14 @@ fn main() {
 
     let mut screen = ScreenData::new(w, h);
 
-    let assets = AssetStorage::new(&mut rl, &thread);
+    let mut assets = AssetStorage::new(&mut rl, &thread);
 
-    let mut player = Player::new();
-    
-    let grid = systems::procgen::Grid::new(600, 500);
+    let mut player = Player::new(&mut assets, &mut rl, &thread);
+
+    let grid = systems::procgen::Grid::new();
     let grid_image = systems::worlddata::temp_draw_grid(&grid);
     let grid_texture = rl.load_texture_from_image(&thread, &grid_image).unwrap();
-    
+
     while !rl.window_should_close() {
         let time = std::time::Instant::now();
         if rl.is_window_resized() {
@@ -41,12 +42,7 @@ fn main() {
         let mut d = rl.begin_drawing(&thread);
         d.clear_background(Color::WHITE);
 
-        d.draw_texture(
-            &grid_texture,
-            0,
-            0,
-            Color::WHITE,
-        );
+        d.draw_texture(&grid_texture, 0, 0, Color::WHITE);
         {
             let mut d2 = d.begin_mode2D(screen.camera);
 
@@ -56,7 +52,9 @@ fn main() {
         }
 
         d.draw_fps(10, 10);
-        
+
+        player.inventory.draw(&mut d, &assets);
+
         let frametime = time.elapsed().as_millis();
 
         d.draw_text(

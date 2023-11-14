@@ -5,3 +5,5 @@ pub mod procgen;
 pub mod camps;
 pub mod worlddata;
 pub mod attacks;
+pub mod weapons;
+pub mod inventory;

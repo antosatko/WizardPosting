@@ -1,22 +1,55 @@
-use std::ops::{Add, Mul};
+use std::{
+    collections::HashMap,
+    ops::{Add, Mul},
+};
 
 use raylib::prelude::*;
 
 pub struct AssetStorage {
     pub player: raylib::texture::Texture2D,
-    pub magicball: raylib::texture::Texture2D,
+    _server: HashMap<String, usize>,
+    pub server: Vec<DynTex>,
+}
+
+pub struct DynTex {
+    pub tex: raylib::texture::Texture2D,
+    pub name: String,
 }
 
 impl AssetStorage {
     pub fn new(rl: &mut RaylibHandle, thread: &RaylibThread) -> AssetStorage {
         let player = Self::load_texture(rl, thread, "assets/player.png");
-        let magicball = Self::load_texture(rl, thread, "assets/magicball.png");
-        AssetStorage { player, magicball }
+        AssetStorage {
+            player,
+            server: vec![],
+            _server: HashMap::new(),
+        }
     }
 
     pub fn load_texture(rl: &mut RaylibHandle, thread: &RaylibThread, path: &str) -> Texture2D {
         let img = Image::load_image(path).unwrap();
         rl.load_texture_from_image(thread, &img).unwrap()
+    }
+
+    /// Loads a texture and returns its index in the server
+    pub fn load_texture_dyn(
+        &mut self,
+        rl: &mut RaylibHandle,
+        thread: &RaylibThread,
+        path: &str,
+    ) -> usize {
+        if let Some(index) = self._server.get(path) {
+            return *index;
+        }
+        let img = Image::load_image(path).unwrap();
+        let tex = rl.load_texture_from_image(thread, &img).unwrap();
+        let index = self.server.len();
+        self.server.push(DynTex {
+            tex,
+            name: path.to_string(),
+        });
+        self._server.insert(path.to_string(), index);
+        index
     }
 }
 

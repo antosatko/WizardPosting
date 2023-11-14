@@ -2,12 +2,16 @@ use raylib::prelude::*;
 
 use crate::player::{PlayerId, Sides};
 
-use super::effects::Effect;
+use super::{
+    effects::Effect,
+    units::{Summons, Unit},
+};
 
 pub struct Attack {
     pub duration: f32,
     pub max_duration: f32,
     pub source: AttackSources,
+    pub kind: AttackNodes,
 }
 
 pub enum AttackSources {
@@ -20,7 +24,7 @@ pub enum AttackSources {
 
 pub struct AttackTarget {
     pub side: Sides,
-    pub target: AttackTargets
+    pub target: AttackTargets,
 }
 
 pub enum AttackTargets {
@@ -29,26 +33,19 @@ pub enum AttackTargets {
     All,
 }
 
-
 #[derive(Debug, Clone)]
 pub enum Attacks {
     Magicball {
-        position: Vector2,
-        speed: Vector2,
         unit_hit: Option<Box<AttackNodes>>,
         environment_hit: Option<Box<AttackNodes>>,
     },
-    Slash {
-
-    },
-    Arrow {
-
-    },
+    Slash {},
+    Arrow {},
 }
-
 
 #[derive(Debug, Clone)]
 pub enum AttackNodes {
     Attack(Attacks),
     Effect(Effect),
+    Summon(Summons),
 }
