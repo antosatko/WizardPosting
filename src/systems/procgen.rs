@@ -1,5 +1,7 @@
 use super::camps::Camp;
 
+pub const TILE_SIDE: i32 = 35;
+
 #[derive(PartialEq, Clone, Debug)]
 pub struct Grid {
     pub width: i32,
@@ -69,6 +71,10 @@ pub enum Tiles {
     Wood,
     HardenedStone,
     Iron,
+
+
+    /// TileData represents a block that holds data, that data will be stored somewhere else
+    TileData,
 }
 
 impl Tiles {
@@ -143,5 +149,11 @@ impl Grid {
 
     pub fn set_tile(&mut self, x: i32, y: i32, tile: Tile) {
         self.tiles[x as usize][self.height as usize - y as usize - 1] = tile;
+    }
+
+
+    /// returns position of tile from real world coordinates
+    pub fn get_coords(&mut self, x: f32, y: f32) -> (i32, i32) {
+        ((x/TILE_SIDE as f32).floor() as i32, (y/TILE_SIDE as f32).floor() as i32)
     }
 }

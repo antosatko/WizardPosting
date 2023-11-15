@@ -60,6 +60,7 @@ impl Tiles {
             Tiles::Wood => Color::BROWN,
             Tiles::HardenedStone => Color::DARKGRAY,
             Tiles::Iron => Color::GRAY,
+            Tiles::TileData => Color::DARKPURPLE,
         }
     }
 }

@@ -7,3 +7,5 @@ pub mod worlddata;
 pub mod attacks;
 pub mod weapons;
 pub mod inventory;
+pub mod mouse_mode;
+pub mod collision;
